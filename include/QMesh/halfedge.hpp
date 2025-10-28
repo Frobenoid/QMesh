@@ -1,16 +1,15 @@
 #pragma once
 
+#include "QMesh/types.hpp"
 #include <cstdint>
 namespace qmesh {
 
 class HalfEdge {
 public:
-  // Index of origin vertex.
-  uint32_t origin;
-  // Twin.
-  uint32_t twin;
-  uint32_t incident_face;
-  uint32_t next;
-  uint32_t prev;
+  VertexId origin;
+  HalfEdgeId twin;
+  FaceId incident_face;
+  HalfEdgeId next;
+  HalfEdgeId prev;
 };
 } // namespace qmesh
