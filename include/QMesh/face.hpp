@@ -30,6 +30,9 @@ public:
   // is called then an error is thrown.
   HalfEdgeId incident_edge() const;
 
+  FaceId id() const;
+  void set_id(FaceId to);
+
 private:
   // Indices of vertex forming this face, relative to their
   // parent mesh.
@@ -41,5 +44,8 @@ private:
   // is created (during mesh initialization) but any face
   // within an initialized mesh must have an incident edge.
   std::optional<HalfEdgeId> incident_edge_;
+
+  // Id inside parent mesh.
+  std::optional<FaceId> id_;
 };
 } // namespace qmesh

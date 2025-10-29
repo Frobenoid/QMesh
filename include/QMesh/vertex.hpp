@@ -32,6 +32,9 @@ public:
   // nothing happens.
   void set_as_origin(HalfEdgeId of);
 
+  VertexId id() const;
+  void set_id(VertexId to);
+
 private:
   std::array<float, 3> position_;
 
@@ -40,5 +43,8 @@ private:
   // May not exists at the time the vertex
   // is created.
   std::optional<HalfEdgeId> incident_edge_;
+
+  // Id inside parent mesh.
+  std::optional<VertexId> id_;
 };
 } // namespace qmesh

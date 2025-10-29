@@ -1,5 +1,6 @@
 
 #include "QMesh/face.hpp"
+#include "QMesh/types.hpp"
 #include <stdexcept>
 
 namespace qmesh {
@@ -24,4 +25,17 @@ HalfEdgeId Face::incident_edge() const {
              : throw std::runtime_error("Incident edge for face has no value");
 }
 
+FaceId Face::id() const {
+  return id_.has_value()
+             ? id_.value()
+             : throw std::runtime_error("Current face has no parent mesh.");
+};
+
+void Face::set_id(FaceId to) {
+  if (!id_.has_value()) {
+    id_ = to;
+  } else {
+    throw std::runtime_error("[ERROR]: This face has already a parent.");
+  }
+};
 } // namespace qmesh

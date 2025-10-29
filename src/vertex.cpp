@@ -2,6 +2,7 @@
 #include "QMesh/types.hpp"
 #include <QMesh/vertex.hpp>
 #include <array>
+#include <stdexcept>
 
 namespace qmesh {
 
@@ -21,6 +22,20 @@ HalfEdgeId Vertex::incident_edge() {
 void Vertex::set_as_origin(HalfEdgeId of) {
   if (!incident_edge_.has_value()) {
     incident_edge_ = of;
+  }
+};
+
+VertexId Vertex::id() const {
+  return id_.has_value()
+             ? id_.value()
+             : throw std::runtime_error("Current vertex has no parent mesh.");
+};
+
+void Vertex::set_id(VertexId to) {
+  if (!id_.has_value()) {
+    id_ = to;
+  } else {
+    throw std::runtime_error("[ERROR]: This vertex has already a parent.");
   }
 };
 
