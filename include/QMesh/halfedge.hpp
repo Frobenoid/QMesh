@@ -5,12 +5,6 @@ namespace qmesh {
 
 class HalfEdge {
 public:
-  VertexId origin;
-  HalfEdgeId twin;
-  FaceId incident_face;
-  HalfEdgeId next;
-  HalfEdgeId prev;
-
   HalfEdge(VertexId origin, FaceId incident_face);
   HalfEdge(VertexId origin);
 
@@ -18,5 +12,12 @@ public:
   void set_next(HalfEdgeId to);
   void set_prev(HalfEdgeId to);
   void set_twin(HalfEdgeId to);
+
+private:
+  VertexId origin;
+  HalfEdgeId twin;
+  FaceId incident_face;
+  HalfEdgeId next;
+  HalfEdgeId prev;
 };
 } // namespace qmesh

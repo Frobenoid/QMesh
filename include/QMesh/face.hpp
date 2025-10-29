@@ -21,7 +21,7 @@ public:
   void set_incident_edge(HalfEdgeId of);
 
   // Returns all half edges incident to this face.
-  // TODO: Whay should the return type of this be?
+  // TODO: What should the return type of this be?
   auto incident_edges();
 
   // Retrieves a half edge incident to

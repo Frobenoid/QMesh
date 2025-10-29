@@ -10,9 +10,6 @@ Vertex::Vertex(std::array<float, 3> position) { position_ = position; };
 float Vertex::x() const { return position_[0]; }
 float Vertex::y() const { return position_[1]; }
 float Vertex::z() const { return position_[2]; }
-float Vertex::x() { return position_[0]; }
-float Vertex::y() { return position_[1]; }
-float Vertex::z() { return position_[2]; }
 
 HalfEdgeId Vertex::incident_edge() {
   return incident_edge_.has_value()
