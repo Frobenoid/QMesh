@@ -2,4 +2,4 @@ build/
 vcpkg_installed/
 vcpkg-manifest-install.log
 compile_commands.json
-.cache
+.cache/

@@ -1,4 +1,7 @@
-add_library(libqmesh libqmesh.cpp)
+add_library(libqmesh
+libqmesh.cpp
+vertex.cpp
+)
 add_library(qmesh::libqmesh ALIAS libqmesh)
 
 set_target_properties(

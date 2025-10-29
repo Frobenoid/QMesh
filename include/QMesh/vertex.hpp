@@ -7,10 +7,6 @@ namespace qmesh {
 
 class Vertex {
 public:
-  std::array<float, 3> position;
-  // Index of incident edge in parent mesh.
-  HalfEdgeId incident_edge;
-
   Vertex(std::array<float, 3> position);
   ~Vertex() = default;
 
@@ -21,5 +17,28 @@ public:
   float x();
   float y();
   float z();
+
+  // Returns the ID of an incident edge of the node,
+  // if there is no incident edge then this throws.
+  //
+  // There may be multiple half-edges originating
+  // from this node, they can be retrieve with the
+  // `incident_edges()` method.
+  HalfEdgeId incident_edge();
+
+  // Set the vertex as the origin of a given
+  // half-edge. This only happens if the vertex
+  // has not an assigned incident edge. Othwervise
+  // nothing happens.
+  void set_as_origin(HalfEdgeId of);
+
+private:
+  std::array<float, 3> position_;
+
+  // Index of incident edge in parent mesh.
+  //
+  // May not exists at the time the vertex
+  // is created.
+  std::optional<HalfEdgeId> incident_edge_;
 };
 } // namespace qmesh
