@@ -6,7 +6,7 @@
 
 namespace qmesh {
 
-Vertex::Vertex(std::array<float, 3> position) { position_ = position; };
+Vertex::Vertex(std::array<float, 3> position) : position_(position) {};
 
 float Vertex::x() const { return position_[0]; }
 float Vertex::y() const { return position_[1]; }

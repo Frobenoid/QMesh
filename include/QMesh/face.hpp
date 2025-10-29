@@ -36,6 +36,9 @@ public:
 private:
   // Indices of vertex forming this face, relative to their
   // parent mesh.
+  // FIX: This is not required. Indices can be created
+  // only for deserealization in order to be consumed by
+  // the renderer.
   std::array<VertexId, 3> indices_;
 
   // Index of incident edge in parent mesh.

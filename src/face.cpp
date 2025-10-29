@@ -5,7 +5,7 @@
 
 namespace qmesh {
 
-Face::Face(std::array<uint32_t, 3> indices) { indices_ = indices; };
+Face::Face(std::array<uint32_t, 3> indices) : indices_(indices) {};
 
 Face::Face(uint32_t i, uint32_t j, uint32_t k) {
   indices_[0] = i;
