@@ -1,5 +1,3 @@
-
-#include "QMesh/types.hpp"
 #include <QMesh/vertex.hpp>
 #include <array>
 #include <stdexcept>
@@ -16,7 +14,7 @@ HalfEdgeId Vertex::incident_edge() {
   return incident_edge_.has_value()
              ? incident_edge_.value()
              // TODO: When can this happen?
-             : throw std::runtime_error("Incident edge has no value");
+             : throw std::runtime_error("[ERROR]: Incident edge has no value");
 };
 
 void Vertex::set_as_origin(HalfEdgeId of) {
@@ -26,16 +24,16 @@ void Vertex::set_as_origin(HalfEdgeId of) {
 };
 
 VertexId Vertex::id() const {
-  return id_.has_value()
-             ? id_.value()
-             : throw std::runtime_error("Current vertex has no parent mesh.");
+  return id_.has_value() ? id_.value()
+                         : throw std::runtime_error(
+                               "[ERROR]: Current vertex has no parent mesh.");
 };
 
 void Vertex::set_id(VertexId to) {
   if (!id_.has_value()) {
     id_ = to;
   } else {
-    throw std::runtime_error("[ERROR]: This vertex has already a parent.");
+    throw std::runtime_error("[ERROR]: This vertex already has a parent.");
   }
 };
 

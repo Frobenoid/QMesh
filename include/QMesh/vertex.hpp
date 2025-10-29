@@ -1,7 +1,8 @@
 #pragma once
 
-#include "QMesh/types.hpp"
+#include <QMesh/types.hpp>
 #include <array>
+#include <optional>
 
 namespace qmesh {
 

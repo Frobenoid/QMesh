@@ -15,16 +15,23 @@ public:
   void set_prev(HalfEdgeId to);
   void set_twin(HalfEdgeId to);
 
+  VertexId origin() const;
+  std::optional<FaceId> incident_face() const;
+  HalfEdgeId twin() const;
+  HalfEdgeId next() const;
+  HalfEdgeId prev() const;
+
 private:
-  VertexId origin;
+  VertexId origin_;
+  // A boundary half edge can have an empty face.
+  std::optional<FaceId> incident_face_;
 
   // May not exist a the time of creation but every
   // half edge in an initialized mesh must have all
   // the following properties.
 
-  std::optional<FaceId> incident_face;
-  std::optional<HalfEdgeId> twin;
-  std::optional<HalfEdgeId> next;
-  std::optional<HalfEdgeId> prev;
+  std::optional<HalfEdgeId> twin_;
+  std::optional<HalfEdgeId> next_;
+  std::optional<HalfEdgeId> prev_;
 };
 } // namespace qmesh
