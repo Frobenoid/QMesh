@@ -18,7 +18,7 @@ void Face::set_incident_edge(HalfEdgeId edge) {
   }
 };
 
-HalfEdgeId Face::incident_edge() {
+HalfEdgeId Face::incident_edge() const {
   return incident_edge_.has_value()
              ? incident_edge_.value()
              : throw std::runtime_error("Incident edge for face has no value");

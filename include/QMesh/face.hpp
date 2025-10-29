@@ -28,7 +28,7 @@ public:
   // this face. If there is no half edge
   // incident to this face and this function
   // is called then an error is thrown.
-  HalfEdgeId incident_edge();
+  HalfEdgeId incident_edge() const;
 
 private:
   // Indices of vertex forming this face, relative to their
