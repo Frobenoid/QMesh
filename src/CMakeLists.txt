@@ -1,6 +1,7 @@
 add_library(libqmesh
 libqmesh.cpp
 vertex.cpp
+face.cpp
 )
 add_library(qmesh::libqmesh ALIAS libqmesh)
 

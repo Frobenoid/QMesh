@@ -26,9 +26,13 @@ public:
   // `incident_edges()` method.
   HalfEdgeId incident_edge();
 
+  // Returns all half edges incident to this vertex.
+  // TODO: Whay should the return type of this be?
+  auto incident_edges();
+
   // Set the vertex as the origin of a given
   // half-edge. This only happens if the vertex
-  // has not an assigned incident edge. Othwervise
+  // has not been assigned an incident edge. Othwervise
   // nothing happens.
   void set_as_origin(HalfEdgeId of);
 
