@@ -15,8 +15,8 @@ public:
   HalfEdge(VertexId origin);
 
   void set_incident_face(FaceId to);
-  void set_next(FaceId to);
-  void set_prev(FaceId to);
-  void set_twin(FaceId to);
+  void set_next(HalfEdgeId to);
+  void set_prev(HalfEdgeId to);
+  void set_twin(HalfEdgeId to);
 };
 } // namespace qmesh
