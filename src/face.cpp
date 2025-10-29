@@ -17,20 +17,20 @@ HalfEdgeId Face::incident_edge() const {
   return incident_edge_.has_value()
              ? incident_edge_.value()
              : throw std::runtime_error(
-                   "[ERROR]: Incident edge for face has no value");
+                   "Incident edge for face has no value");
 }
 
 FaceId Face::id() const {
   return id_.has_value() ? id_.value()
                          : throw std::runtime_error(
-                               "[ERROR]: Current face has no parent mesh.");
+                               "Current face has no parent mesh.");
 }
 
 void Face::set_id(FaceId to) {
   if (!id_.has_value()) {
     id_ = to;
   } else {
-    throw std::runtime_error("[ERROR]: This face already has a parent.");
+    throw std::runtime_error("This face already has a parent.");
   }
 }
 } // namespace qmesh

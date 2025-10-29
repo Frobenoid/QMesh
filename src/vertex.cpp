@@ -4,7 +4,7 @@
 
 namespace qmesh {
 
-Vertex::Vertex(std::array<float, 3> position) : position_(position) {};
+Vertex::Vertex(std::array<float, 3> position) : position_(position) {}
 
 float Vertex::x() const { return position_[0]; }
 float Vertex::y() const { return position_[1]; }
@@ -14,27 +14,27 @@ HalfEdgeId Vertex::incident_edge() {
   return incident_edge_.has_value()
              ? incident_edge_.value()
              // TODO: When can this happen?
-             : throw std::runtime_error("[ERROR]: Incident edge has no value");
-};
+             : throw std::runtime_error("Incident edge has no value");
+}
 
 void Vertex::set_as_origin(HalfEdgeId of) {
   if (!incident_edge_.has_value()) {
     incident_edge_ = of;
   }
-};
+}
 
 VertexId Vertex::id() const {
   return id_.has_value() ? id_.value()
                          : throw std::runtime_error(
-                               "[ERROR]: Current vertex has no parent mesh.");
-};
+                               "Current vertex has no parent mesh.");
+}
 
 void Vertex::set_id(VertexId to) {
   if (!id_.has_value()) {
     id_ = to;
   } else {
-    throw std::runtime_error("[ERROR]: This vertex already has a parent.");
+    throw std::runtime_error("This vertex already has a parent.");
   }
-};
+}
 
 } // namespace qmesh
