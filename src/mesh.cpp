@@ -2,8 +2,8 @@
 #include <QMesh/mesh.hpp>
 #include <QMesh/types.hpp>
 #include <algorithm>
-#include <array>
-#include <unordered_map>
+#include <map>
+#include <utility>
 
 namespace qmesh {
 // The most basic way to construct a `Mesh` is by
@@ -20,28 +20,29 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
   std::ranges::for_each(
       indices, [this](auto face) { faces_.emplace_back(face, faces_.size()); });
 
-  // std::unordered_map<std::pair<VertexId, VertexId>, HalfEdgeId> visited;
-  std::unordered_map<std::array<VertexId, 2>, HalfEdgeId> visited;
+  // TODO: Order is not required for this, used an unordered map with a custom
+  // hash function.
+  std::map<std::pair<VertexId, VertexId>, HalfEdgeId> visited;
 
   // Initialize halfedges.
   std::ranges::for_each(faces_, [this, &visited](auto face) {
-    std::vector<std::array<VertexId, 2>> circulate = {
-        {face.indices_[0], face.indices_[1]},
-        {face.indices_[1], face.indices_[2]},
-        {face.indices_[2], face.indices_[0]},
+    std::vector<std::pair<VertexId, VertexId>> circulate = {
+        std::pair(face.indices_[0], face.indices_[1]),
+        std::pair(face.indices_[1], face.indices_[2]),
+        std::pair(face.indices_[2], face.indices_[0]),
     };
 
-    std::ranges::for_each(circulate, [this, &visited, circulate,
-                                      face](std::array<VertexId, 2> index) {
-      if (visited.contains({index[1], index[0]})) {
+    std::ranges::for_each(circulate, [this, &visited, circulate, face](
+                                         std::pair<VertexId, VertexId> index) {
+      if (visited.contains(std::pair(index.second, index.first))) {
         // The current edge has no face so we will assign it.
         HalfEdge current = half_edges_[visited.at(index)];
         current.set_incident_face(face.id());
       } else {
         // Create inner edge with `i` as origin and  with the current face.
-        HalfEdge inner(index[0], face.id());
+        HalfEdge inner(index.first, face.id());
         // Create outer edge without face.
-        HalfEdge outer(index[1]);
+        HalfEdge outer(index.second);
 
         // Assign their ID's
         inner.set_id(half_edges_.size());
@@ -52,8 +53,8 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
         outer.set_twin(inner.id());
         //
         // Mark them as visited.
-        visited[{index[0], index[1]}] = inner.id();
-        visited[{index[1], index[0]}] = outer.id();
+        visited[std::pair(index.first, index.second)] = inner.id();
+        visited[std::pair(index.second, index.first)] = outer.id();
 
         // Add them to the list.
         half_edges_.push_back(inner);
