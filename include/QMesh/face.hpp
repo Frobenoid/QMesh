@@ -2,6 +2,7 @@
 #include <QMesh/types.hpp>
 
 #include <array>
+#include <cstddef>
 #include <optional>
 
 namespace qmesh {
@@ -9,6 +10,7 @@ namespace qmesh {
 class Face {
 public:
   Face(std::array<uint32_t, 3> indices);
+  Face(std::array<uint32_t, 3> indices, size_t id);
   Face(uint32_t i, uint32_t j, uint32_t k);
 
   // Set the given half edge as the incident edge
@@ -33,7 +35,6 @@ public:
   FaceId id() const;
   void set_id(FaceId to);
 
-private:
   // Indices of vertex forming this face, relative to their
   // parent mesh.
   // FIX: This is not required. Indices can be created
@@ -41,6 +42,7 @@ private:
   // the renderer.
   std::array<VertexId, 3> indices_;
 
+private:
   // Index of incident edge in parent mesh.
   //
   // May not exists at the time the face

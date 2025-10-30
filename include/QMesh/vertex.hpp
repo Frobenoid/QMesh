@@ -9,6 +9,7 @@ namespace qmesh {
 class Vertex {
 public:
   Vertex(std::array<float, 3> position);
+  Vertex(std::array<float, 3> position, size_t id);
   ~Vertex() = default;
 
   float x() const;

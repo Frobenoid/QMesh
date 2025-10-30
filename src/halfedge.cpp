@@ -15,20 +15,20 @@ VertexId HalfEdge::origin() const { return origin_; }
 std::optional<FaceId> HalfEdge::incident_face() const { return incident_face_; }
 
 HalfEdgeId HalfEdge::twin() const {
-  return twin_.has_value() ? twin_.value()
-                           : throw std::runtime_error(
-                                 "The current half edge has no twin");
+  return twin_.has_value()
+             ? twin_.value()
+             : throw std::runtime_error("The current half edge has no twin");
 }
 
 HalfEdgeId HalfEdge::next() const {
-  return next_.has_value() ? next_.value()
-                           : throw std::runtime_error(
-                                 "The current half edge has no next");
+  return next_.has_value()
+             ? next_.value()
+             : throw std::runtime_error("The current half edge has no next");
 }
 
 HalfEdgeId HalfEdge::prev() const {
-  return prev_.has_value() ? prev_.value()
-                           : throw std::runtime_error(
-                                 "The current half edge has no prev");
+  return prev_.has_value()
+             ? prev_.value()
+             : throw std::runtime_error("The current half edge has no prev");
 }
 } // namespace qmesh

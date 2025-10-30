@@ -5,6 +5,8 @@
 namespace qmesh {
 
 Vertex::Vertex(std::array<float, 3> position) : position_(position) {}
+Vertex::Vertex(std::array<float, 3> position, size_t id)
+    : position_(position), id_(id) {}
 
 float Vertex::x() const { return position_[0]; }
 float Vertex::y() const { return position_[1]; }
@@ -24,9 +26,9 @@ void Vertex::set_as_origin(HalfEdgeId of) {
 }
 
 VertexId Vertex::id() const {
-  return id_.has_value() ? id_.value()
-                         : throw std::runtime_error(
-                               "Current vertex has no parent mesh.");
+  return id_.has_value()
+             ? id_.value()
+             : throw std::runtime_error("Current vertex has no parent mesh.");
 }
 
 void Vertex::set_id(VertexId to) {

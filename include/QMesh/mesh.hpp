@@ -11,11 +11,11 @@ public:
   // The most basic way to construct a `Mesh` is by
   // providing a sequence of vertices and indices.
   Mesh(std::vector<std::array<float, 3>> vertices,
-       std::vector<std::array<uint16_t, 3>> indices);
+       std::vector<std::array<uint32_t, 3>> indices);
 
 private:
-  std::vector<Vertex> vertices;
-  std::vector<Face> faces;
-  std::vector<HalfEdge> half_edges;
+  std::vector<Vertex> vertices_;
+  std::vector<Face> faces_;
+  std::vector<HalfEdge> half_edges_;
 };
 } // namespace qmesh

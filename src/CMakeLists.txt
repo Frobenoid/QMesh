@@ -3,6 +3,7 @@ libqmesh.cpp
 vertex.cpp
 face.cpp
 halfedge.cpp
+mesh.cpp
 )
 add_library(qmesh::libqmesh ALIAS libqmesh)
 
