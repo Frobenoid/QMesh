@@ -20,8 +20,8 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
   std::ranges::for_each(
       indices, [this](auto face) { faces_.emplace_back(face, faces_.size()); });
 
-  // TODO: Order is not required for this, used an unordered map with a custom
-  // hash function.
+  // TODO: Order is not required for this, use an unordered map with a custom
+  // hash function. (It has a better performance)
   std::map<std::pair<VertexId, VertexId>, HalfEdgeId> visited;
 
   // Initialize halfedges.
