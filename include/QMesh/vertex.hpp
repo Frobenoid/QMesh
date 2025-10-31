@@ -9,6 +9,7 @@ namespace qmesh {
 class Vertex {
 public:
   Vertex(std::array<float, 3> position);
+  Vertex(std::array<float, 3> position, size_t id);
   ~Vertex() = default;
 
   float x() const;
@@ -35,6 +36,8 @@ public:
 
   VertexId id() const;
   void set_id(VertexId to);
+
+  bool has_incident_edge();
 
 private:
   std::array<float, 3> position_;

@@ -14,14 +14,17 @@ public:
   void set_next(HalfEdgeId to);
   void set_prev(HalfEdgeId to);
   void set_twin(HalfEdgeId to);
+  void set_id(HalfEdgeId to);
 
   VertexId origin() const;
   std::optional<FaceId> incident_face() const;
   HalfEdgeId twin() const;
   HalfEdgeId next() const;
   HalfEdgeId prev() const;
+  HalfEdgeId id() const;
 
 private:
+  HalfEdgeId id_;
   VertexId origin_;
   // A boundary half edge can have an empty face.
   std::optional<FaceId> incident_face_;

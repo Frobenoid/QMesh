@@ -2,13 +2,16 @@
 #include <QMesh/types.hpp>
 
 #include <array>
+#include <cstddef>
 #include <optional>
+#include <utility>
 
 namespace qmesh {
 // TODO: This will only work for triangle meshes.
 class Face {
 public:
   Face(std::array<uint32_t, 3> indices);
+  Face(std::array<uint32_t, 3> indices, size_t id);
   Face(uint32_t i, uint32_t j, uint32_t k);
 
   // Set the given half edge as the incident edge
@@ -24,6 +27,7 @@ public:
   // TODO: What should the return type of this be?
   auto incident_edges();
 
+  bool has_incident_edge();
   // Retrieves a half edge incident to
   // this face. If there is no half edge
   // incident to this face and this function
@@ -32,6 +36,8 @@ public:
 
   FaceId id() const;
   void set_id(FaceId to);
+
+  const std::array<std::pair<VertexId, VertexId>, 3> circulate() const;
 
 private:
   // Indices of vertex forming this face, relative to their

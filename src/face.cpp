@@ -4,6 +4,8 @@
 namespace qmesh {
 
 Face::Face(std::array<uint32_t, 3> indices) : indices_(indices) {}
+Face::Face(std::array<uint32_t, 3> indices, size_t id)
+    : indices_(indices), id_(id) {}
 
 Face::Face(uint32_t i, uint32_t j, uint32_t k) : indices_{i, j, k} {}
 
@@ -16,14 +18,13 @@ void Face::set_incident_edge(HalfEdgeId edge) {
 HalfEdgeId Face::incident_edge() const {
   return incident_edge_.has_value()
              ? incident_edge_.value()
-             : throw std::runtime_error(
-                   "Incident edge for face has no value");
+             : throw std::runtime_error("Incident edge for face has no value");
 }
 
 FaceId Face::id() const {
-  return id_.has_value() ? id_.value()
-                         : throw std::runtime_error(
-                               "Current face has no parent mesh.");
+  return id_.has_value()
+             ? id_.value()
+             : throw std::runtime_error("Current face has no parent mesh.");
 }
 
 void Face::set_id(FaceId to) {
@@ -32,5 +33,16 @@ void Face::set_id(FaceId to) {
   } else {
     throw std::runtime_error("This face already has a parent.");
   }
+}
+
+bool Face::has_incident_edge() { return incident_edge_.has_value(); }
+
+// TODO: Allow this to be more general.
+const std::array<std::pair<VertexId, VertexId>, 3> Face::circulate() const {
+  return {
+      std::pair(indices_[0], indices_[1]),
+      std::pair(indices_[1], indices_[2]),
+      std::pair(indices_[2], indices_[0]),
+  };
 }
 } // namespace qmesh
