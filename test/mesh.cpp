@@ -1,5 +1,6 @@
 #include "QMesh/mesh.hpp"
 #include <array>
+#include <catch2/catch_message.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
@@ -31,6 +32,7 @@ TEST_CASE("Glued triangles", "[initialization, mesh]") {
   REQUIRE(mesh.num_of_vertices() == 4);
   REQUIRE(mesh.num_of_half_edges() == 10);
 
+  // Verifying existence
   for (auto v : mesh.vertices()) {
     REQUIRE_NOTHROW(v.id());
     REQUIRE_NOTHROW(v.incident_edge());
@@ -46,5 +48,24 @@ TEST_CASE("Glued triangles", "[initialization, mesh]") {
     REQUIRE_NOTHROW(e.twin());
     REQUIRE_NOTHROW(e.next());
     REQUIRE_NOTHROW(e.prev());
+  }
+
+  // Verifying topology
+  for (auto e : mesh.half_edges()) {
+    REQUIRE(mesh.half_edges()[e.twin()].twin() == e.id());
+
+    if (e.incident_face().has_value()) {
+      // this.next.next.next = this
+      REQUIRE(mesh.half_edges()[mesh.half_edges()[e.next()].next()].next() ==
+              e.id());
+
+      // this.twin.next.origin = this.origin
+      REQUIRE(mesh.half_edges()[mesh.half_edges()[e.twin()].next()].origin() ==
+              e.origin());
+
+      // this.twin.origin = this.next.origin
+      REQUIRE(mesh.half_edges()[e.twin()].origin() ==
+              mesh.half_edges()[e.next()].origin());
+    }
   }
 }
