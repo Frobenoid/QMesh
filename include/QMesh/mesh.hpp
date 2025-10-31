@@ -13,6 +13,10 @@ public:
   Mesh(std::vector<std::array<float, 3>> vertices,
        std::vector<std::array<uint32_t, 3>> indices);
 
+  size_t num_of_vertices() const;
+  size_t num_of_faces() const;
+  size_t num_of_half_edges() const;
+
 private:
   std::vector<Vertex> vertices_;
   std::vector<Face> faces_;

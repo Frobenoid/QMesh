@@ -10,7 +10,10 @@ void HalfEdge::remove_incident_face() { incident_face_ = std::nullopt; }
 void HalfEdge::set_next(HalfEdgeId to) { next_ = to; }
 void HalfEdge::set_prev(HalfEdgeId to) { prev_ = to; }
 void HalfEdge::set_twin(HalfEdgeId to) { twin_ = to; }
+void HalfEdge::set_id(HalfEdgeId to) { id_ = to; }
+
 VertexId HalfEdge::origin() const { return origin_; }
+VertexId HalfEdge::id() const { return id_; }
 
 std::optional<FaceId> HalfEdge::incident_face() const { return incident_face_; }
 
