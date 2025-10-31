@@ -42,7 +42,8 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
         circulate, [this, &visited, circulate, &edges_of_face,
                     face](std::pair<VertexId, VertexId> index) {
           if (visited.contains(std::pair(index.second, index.first))) {
-            // The current edge has no face so we will assign it.
+            // The current edge was previously created as a boundary edge,
+            // now we assign its face.
             HalfEdge current = half_edges_[visited.at(index)];
             current.set_incident_face(face.id());
             edges_of_face.push_back(current.id());
