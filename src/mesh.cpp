@@ -27,7 +27,7 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
   std::map<std::pair<VertexId, VertexId>, HalfEdgeId> visited;
 
   // Initialize halfedges.
-  std::ranges::for_each(faces_, [this, &visited](auto face) {
+  std::ranges::for_each(faces_, [this, &visited](auto &face) {
     // TODO: Improve this. This wont work for non triangle meshes.
     std::vector<std::pair<VertexId, VertexId>> circulate = {
         std::pair(face.indices_[0], face.indices_[1]),
