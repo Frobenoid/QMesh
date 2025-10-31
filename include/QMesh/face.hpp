@@ -4,6 +4,8 @@
 #include <array>
 #include <cstddef>
 #include <optional>
+#include <utility>
+#include <vector>
 
 namespace qmesh {
 // TODO: This will only work for triangle meshes.
@@ -36,6 +38,9 @@ public:
   FaceId id() const;
   void set_id(FaceId to);
 
+  const std::vector<std::pair<VertexId, VertexId>> circulate() const;
+
+private:
   // Indices of vertex forming this face, relative to their
   // parent mesh.
   // FIX: This is not required. Indices can be created
@@ -43,7 +48,6 @@ public:
   // the renderer.
   std::array<VertexId, 3> indices_;
 
-private:
   // Index of incident edge in parent mesh.
   //
   // May not exists at the time the face
