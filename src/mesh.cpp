@@ -1,7 +1,9 @@
 
+#include "QMesh/halfedge.hpp"
 #include <QMesh/mesh.hpp>
 #include <QMesh/types.hpp>
 #include <algorithm>
+#include <iostream>
 #include <map>
 #include <utility>
 #include <vector>
@@ -47,7 +49,6 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
             // now we assign its face.
             HalfEdge &current = half_edges_[visited.at(index)];
             current.set_incident_face(face.id());
-            edges_of_face.push_back(current.id());
           } else {
             // Create inner edge with `i` as origin and  with the current face.
             HalfEdge inner(index.first, face.id());
@@ -70,6 +71,7 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
             half_edges_.push_back(inner);
             half_edges_.push_back(outer);
             edges_of_face.push_back(inner.id());
+            edges_of_face.push_back(outer.id());
           }
         });
 
@@ -77,11 +79,18 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
     // a next/prev .
     // TODO: Improve this using another circulate view.
     for (int i = 0; i < edges_of_face.size(); i++) {
-      auto current = half_edges_[edges_of_face[i]];
+      HalfEdge &current = half_edges_[edges_of_face[i]];
+      std::cout << "\tAssignin pointers for " << current.id() << '\n';
       HalfEdgeId prev = edges_of_face[(i - 1) % edges_of_face.size()];
       current.set_prev(prev);
       HalfEdgeId next = edges_of_face[(i + 1) % edges_of_face.size()];
       current.set_next(next);
+    }
+
+    // Assign incident edges to each vertex.
+    for (auto e : half_edges_) {
+      if (!vertices_[e.origin()].has_incident_edge())
+        vertices_[e.origin()].set_as_origin(e.id());
     }
 
     // Assign incident edge for this face.
@@ -92,4 +101,9 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
 size_t Mesh::num_of_vertices() const { return vertices_.size(); }
 size_t Mesh::num_of_faces() const { return faces_.size(); }
 size_t Mesh::num_of_half_edges() const { return half_edges_.size(); }
+
+std::vector<Vertex> &Mesh::vertices() { return vertices_; }
+std::vector<Face> &Mesh::faces() { return faces_; }
+std::vector<HalfEdge> &Mesh::half_edges() { return half_edges_; }
+
 } // namespace qmesh

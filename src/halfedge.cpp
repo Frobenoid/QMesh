@@ -1,5 +1,6 @@
 #include "QMesh/types.hpp"
 #include <QMesh/halfedge.hpp>
+#include <iostream>
 #include <stdexcept>
 namespace qmesh {
 HalfEdge::HalfEdge(VertexId origin, FaceId incident_face)
@@ -7,7 +8,6 @@ HalfEdge::HalfEdge(VertexId origin, FaceId incident_face)
 HalfEdge::HalfEdge(VertexId origin) : origin_(origin) {}
 
 void HalfEdge::set_incident_face(FaceId to) { incident_face_ = to; }
-void HalfEdge::remove_incident_face() { incident_face_ = std::nullopt; }
 void HalfEdge::set_next(HalfEdgeId to) { next_ = to; }
 void HalfEdge::set_prev(HalfEdgeId to) { prev_ = to; }
 void HalfEdge::set_twin(HalfEdgeId to) { twin_ = to; }
@@ -25,6 +25,7 @@ HalfEdgeId HalfEdge::twin() const {
 }
 
 HalfEdgeId HalfEdge::next() const {
+  std::cout << "Getting next for " << id_ << '\n';
   return next_.has_value()
              ? next_.value()
              : throw std::runtime_error("The current half edge has no next");
@@ -35,4 +36,7 @@ HalfEdgeId HalfEdge::prev() const {
              ? prev_.value()
              : throw std::runtime_error("The current half edge has no prev");
 }
+
+// TODO: Implementing this would require to move pointers around.
+void HalfEdge::remove_incident_face() { incident_face_ = std::nullopt; }
 } // namespace qmesh

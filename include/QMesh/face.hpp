@@ -26,6 +26,7 @@ public:
   // TODO: What should the return type of this be?
   auto incident_edges();
 
+  bool has_incident_edge();
   // Retrieves a half edge incident to
   // this face. If there is no half edge
   // incident to this face and this function

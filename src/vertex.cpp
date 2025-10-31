@@ -16,7 +16,7 @@ HalfEdgeId Vertex::incident_edge() {
   return incident_edge_.has_value()
              ? incident_edge_.value()
              // TODO: When can this happen?
-             : throw std::runtime_error("Incident edge has no value");
+             : throw std::runtime_error("Vertex has no incident edge.");
 }
 
 void Vertex::set_as_origin(HalfEdgeId of) {
@@ -38,5 +38,7 @@ void Vertex::set_id(VertexId to) {
     throw std::runtime_error("This vertex already has a parent.");
   }
 }
+
+bool Vertex::has_incident_edge() { return incident_edge_.has_value(); }
 
 } // namespace qmesh

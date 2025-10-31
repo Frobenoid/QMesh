@@ -34,4 +34,6 @@ void Face::set_id(FaceId to) {
     throw std::runtime_error("This face already has a parent.");
   }
 }
+
+bool Face::has_incident_edge() { return incident_edge_.has_value(); }
 } // namespace qmesh

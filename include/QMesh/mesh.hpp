@@ -17,6 +17,10 @@ public:
   size_t num_of_faces() const;
   size_t num_of_half_edges() const;
 
+  std::vector<Vertex> &vertices();
+  std::vector<Face> &faces();
+  std::vector<HalfEdge> &half_edges();
+
 private:
   std::vector<Vertex> vertices_;
   std::vector<Face> faces_;

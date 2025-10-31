@@ -37,6 +37,8 @@ public:
   VertexId id() const;
   void set_id(VertexId to);
 
+  bool has_incident_edge();
+
 private:
   std::array<float, 3> position_;
 
