@@ -18,8 +18,9 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
   });
 
   // Intialize faces.
-  std::ranges::for_each(
-      indices, [this](auto face) { faces_.emplace_back(face, faces_.size()); });
+  std::ranges::for_each(indices, [this](auto &face) {
+    faces_.emplace_back(face, faces_.size());
+  });
 
   // TODO: Order is not required for this, use an unordered map with a custom
   // hash function. (It has a better performance)
@@ -44,7 +45,7 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
           if (visited.contains(std::pair(index.second, index.first))) {
             // The current edge was previously created as a boundary edge,
             // now we assign its face.
-            HalfEdge current = half_edges_[visited.at(index)];
+            HalfEdge &current = half_edges_[visited.at(index)];
             current.set_incident_face(face.id());
             edges_of_face.push_back(current.id());
           } else {
@@ -78,7 +79,7 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
     for (int i = 0; i < edges_of_face.size(); i++) {
       auto current = half_edges_[edges_of_face[i]];
       HalfEdgeId prev = edges_of_face[(i - 1) % edges_of_face.size()];
-      current.set_next(prev);
+      current.set_prev(prev);
       HalfEdgeId next = edges_of_face[(i + 1) % edges_of_face.size()];
       current.set_next(next);
     }

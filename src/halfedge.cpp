@@ -1,3 +1,4 @@
+#include "QMesh/types.hpp"
 #include <QMesh/halfedge.hpp>
 #include <stdexcept>
 namespace qmesh {
@@ -13,7 +14,7 @@ void HalfEdge::set_twin(HalfEdgeId to) { twin_ = to; }
 void HalfEdge::set_id(HalfEdgeId to) { id_ = to; }
 
 VertexId HalfEdge::origin() const { return origin_; }
-VertexId HalfEdge::id() const { return id_; }
+HalfEdgeId HalfEdge::id() const { return id_; }
 
 std::optional<FaceId> HalfEdge::incident_face() const { return incident_face_; }
 
