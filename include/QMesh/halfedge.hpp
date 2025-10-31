@@ -22,7 +22,6 @@ public:
   HalfEdgeId next() const;
   HalfEdgeId prev() const;
   HalfEdgeId id() const;
-  bool has_incident_face();
 
 private:
   HalfEdgeId id_;
