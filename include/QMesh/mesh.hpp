@@ -3,6 +3,7 @@
 #include <QMesh/halfedge.hpp>
 #include <QMesh/vertex.hpp>
 #include <array>
+#include <ranges>
 #include <vector>
 
 namespace qmesh {
@@ -20,6 +21,12 @@ public:
   const std::vector<Vertex> &vertices() const;
   const std::vector<Face> &faces() const;
   const std::vector<HalfEdge> &half_edges() const;
+
+  auto internal_edges() const {
+    return half_edges_ | std::views::filter([this](auto &edge) {
+             return edge.incident_face().has_value();
+           });
+  }
 
 private:
   std::vector<Vertex> vertices_;

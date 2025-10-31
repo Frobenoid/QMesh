@@ -92,8 +92,9 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
   // WARN: Please be decent and simplify this.
   // Processing boundary edges.
   std::ranges::for_each(
-      half_edges_ | std::views::filter(
-                        [this](const auto &edge) { return !edge.has_next(); }),
+      half_edges_ | std::views::filter([this](const auto &edge) {
+        return !edge.incident_face().has_value();
+      }),
       [this](auto &edge) {
         HalfEdge twin = half_edges_[edge.twin()];
         HalfEdgeId prev_of_twin = half_edges_[twin.id()].prev();

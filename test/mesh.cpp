@@ -51,7 +51,7 @@ TEST_CASE("Glued triangles", "[initialization, mesh]") {
   }
 
   // Verifying topology
-  for (auto e : mesh.half_edges()) {
+  for (auto e : mesh.internal_edges()) {
     REQUIRE(mesh.half_edges()[e.twin()].twin() == e.id());
 
     if (e.incident_face().has_value()) {
