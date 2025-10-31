@@ -68,4 +68,6 @@ TEST_CASE("Glued triangles", "[initialization, mesh]") {
               mesh.half_edges()[e.next()].origin());
     }
   }
+
+  // TODO: Add outer face walk
 }
