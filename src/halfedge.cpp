@@ -30,8 +30,6 @@ HalfEdgeId HalfEdge::next() const {
              : throw std::runtime_error("The current half edge has no next");
 }
 
-bool HalfEdge::has_next() const { return next_.has_value(); }
-
 HalfEdgeId HalfEdge::prev() const {
   return prev_.has_value()
              ? prev_.value()
