@@ -1,4 +1,3 @@
-
 #include "QMesh/halfedge.hpp"
 #include <QMesh/mesh.hpp>
 #include <QMesh/types.hpp>
@@ -112,6 +111,7 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
     face.set_incident_edge(inner_edges_of_face[0]);
   });
 
+  // WARN: Please be decent and simplify this.
   std::ranges::for_each(
       half_edges_ | std::views::filter(
                         [this](const auto edge) { return !edge.has_next(); }),
