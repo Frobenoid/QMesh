@@ -2,8 +2,8 @@
 #include <QMesh/mesh.hpp>
 #include <QMesh/types.hpp>
 #include <algorithm>
+#include <cstddef>
 #include <cstdio>
-#include <iostream>
 #include <map>
 #include <ranges>
 #include <utility>
@@ -39,16 +39,10 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
     std::ranges::for_each(
         face.circulate(), [this, &visited, &inner_edges_of_face,
                            face](std::pair<VertexId, VertexId> index) {
-          std::cout << "At (" << index.first << "," << index.second << ")"
-                    << "\n";
           if (visited.contains(index)) {
-            std::cout << "\tFound previously outer edge(" << index.first << ","
-                      << index.second << ")" << "\n";
             // The current edge was previously created as a boundary edge,
             // now we assign its face.
             HalfEdge &current = half_edges_[visited.at(index)];
-            printf("\t\tSetting face to %d for Edge(%d)\n ", face.id(),
-                   current.id());
             current.set_incident_face(face.id());
             // Not this is an inner edge of the current face.
             inner_edges_of_face.push_back(current.id());
@@ -70,11 +64,6 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
             visited[std::pair(index.first, index.second)] = inner.id();
             visited[std::pair(index.second, index.first)] = outer.id();
 
-            printf("\t\tInner(%d,%d) -> Edge(%d)\n", index.first, index.second,
-                   inner.id());
-            printf("\t\tOuter(%d,%d) -> Edge(%d)\n", index.second, index.first,
-                   outer.id());
-
             // Add them to the list.
             half_edges_.push_back(inner);
             half_edges_.push_back(outer);
@@ -87,18 +76,13 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
 
     // Now all the created half edges corresponding to this face have
     // a next/prev .
-    // TODO: Improve this using another circulate view.
-    std::cout << "For face " << face.id() << '\n';
     auto n = inner_edges_of_face.size();
-    for (int i = 0; i < inner_edges_of_face.size(); i++) {
+    for (size_t i = 0; i < n; ++i) {
       HalfEdge &current = half_edges_[inner_edges_of_face[i]];
-      std::cout << "\tAssignin pointers for " << current.id() << '\n';
       HalfEdgeId prev = inner_edges_of_face[(i + n - 1) % n];
       current.set_prev(prev);
       HalfEdgeId next = inner_edges_of_face[(i + 1) % n];
       current.set_next(next);
-      printf("Result: Prev(%d)->Edge(%d)->Next(%d)\n", prev,
-             inner_edges_of_face[i], next);
     }
 
     // Assign incident edge for this face.
@@ -106,9 +90,10 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
   });
 
   // WARN: Please be decent and simplify this.
+  // Processing boundary edges.
   std::ranges::for_each(
       half_edges_ | std::views::filter(
-                        [this](const auto edge) { return !edge.has_next(); }),
+                        [this](const auto &edge) { return !edge.has_next(); }),
       [this](auto &edge) {
         HalfEdge twin = half_edges_[edge.twin()];
         HalfEdgeId prev_of_twin = half_edges_[twin.id()].prev();
@@ -118,8 +103,6 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
 
         edge.set_next(twin_of_prev_of_twin);
         edge.set_prev(twin_of_next_of_twin);
-        printf("Edge(%d) -> Next(%d), Prev(%d)\n", edge.id(),
-               twin_of_prev_of_twin, twin_of_next_of_twin);
       });
 }
 

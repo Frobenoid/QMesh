@@ -1,7 +1,7 @@
 #include "QMesh/types.hpp"
 #include <QMesh/halfedge.hpp>
-#include <iostream>
 #include <stdexcept>
+
 namespace qmesh {
 HalfEdge::HalfEdge(VertexId origin, FaceId incident_face)
     : origin_(origin), incident_face_(incident_face) {}
@@ -25,7 +25,6 @@ HalfEdgeId HalfEdge::twin() const {
 }
 
 HalfEdgeId HalfEdge::next() const {
-  std::cout << "Getting next for " << id_ << '\n';
   return next_.has_value()
              ? next_.value()
              : throw std::runtime_error("The current half edge has no next");
