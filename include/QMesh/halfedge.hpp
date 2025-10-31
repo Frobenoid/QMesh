@@ -23,6 +23,8 @@ public:
   HalfEdgeId prev() const;
   HalfEdgeId id() const;
 
+  bool has_next() const;
+
 private:
   HalfEdgeId id_;
   VertexId origin_;

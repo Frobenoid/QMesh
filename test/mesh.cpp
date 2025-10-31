@@ -23,7 +23,7 @@ TEST_CASE("Glued triangles", "[initialization, mesh]") {
   std::vector<std::array<float, 3>> vertex = {
       {0.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {1.0, 1.0, 0.0}, {1.0, 1.0, 1.0}};
 
-  std::vector<std::array<uint32_t, 3>> indices = {{0, 1, 2}, {1, 2, 3}};
+  std::vector<std::array<uint32_t, 3>> indices = {{0, 1, 2}, {1, 3, 2}};
 
   qmesh::Mesh mesh(vertex, indices);
 
@@ -32,11 +32,14 @@ TEST_CASE("Glued triangles", "[initialization, mesh]") {
   REQUIRE(mesh.num_of_half_edges() == 10);
 
   for (auto v : mesh.vertices()) {
-    REQUIRE(v.has_incident_edge());
+    REQUIRE_NOTHROW(v.id());
+    REQUIRE_NOTHROW(v.incident_edge());
   }
 
   for (auto f : mesh.faces()) {
     REQUIRE(f.has_incident_edge());
+    REQUIRE_NOTHROW(f.id());
+    REQUIRE_NOTHROW(f.incident_edge());
   }
 
   for (auto e : mesh.half_edges()) {

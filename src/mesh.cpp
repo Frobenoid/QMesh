@@ -3,8 +3,10 @@
 #include <QMesh/mesh.hpp>
 #include <QMesh/types.hpp>
 #include <algorithm>
+#include <cstdio>
 #include <iostream>
 #include <map>
+#include <ranges>
 #include <utility>
 #include <vector>
 
@@ -16,7 +18,8 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
 
   // Initialize vertices.
   std::ranges::for_each(vertices, [this](auto vertex) {
-    vertices_.emplace_back(vertex, vertices_.size());
+    auto id = vertices_.size();
+    vertices_.emplace_back(vertex, id);
   });
 
   // Intialize faces.
@@ -37,65 +40,93 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
         std::pair(face.indices_[2], face.indices_[0]),
     };
 
-    std::vector<HalfEdgeId> edges_of_face;
+    std::vector<HalfEdgeId> inner_edges_of_face;
 
     // Each half edge created here contains an origin vertex, a face (or null)
     // its twin, and its id.
-    std::ranges::for_each(
-        circulate, [this, &visited, circulate, &edges_of_face,
-                    face](std::pair<VertexId, VertexId> index) {
-          if (visited.contains(std::pair(index.second, index.first))) {
-            // The current edge was previously created as a boundary edge,
-            // now we assign its face.
-            HalfEdge &current = half_edges_[visited.at(index)];
-            current.set_incident_face(face.id());
-          } else {
-            // Create inner edge with `i` as origin and  with the current face.
-            HalfEdge inner(index.first, face.id());
-            // Create outer edge without face.
-            HalfEdge outer(index.second);
+    std::ranges::for_each(circulate, [this, &visited, circulate,
+                                      &inner_edges_of_face, face](
+                                         std::pair<VertexId, VertexId> index) {
+      std::cout << "At (" << index.first << "," << index.second << ")" << "\n";
+      if (visited.contains(index)) {
+        std::cout << "\tFound previously outer edge(" << index.first << ","
+                  << index.second << ")" << "\n";
+        // The current edge was previously created as a boundary edge,
+        // now we assign its face.
+        HalfEdge &current = half_edges_[visited.at(index)];
+        printf("\t\tSetting face to %d for Edge(%d)\n ", face.id(),
+               current.id());
+        current.set_incident_face(face.id());
+        // Not this is an inner edge of the current face.
+        inner_edges_of_face.push_back(current.id());
+      } else {
+        // Create inner edge with `i` as origin and  with the current face.
+        HalfEdge inner(index.first, face.id());
+        // Create outer edge without face.
+        HalfEdge outer(index.second);
 
-            // Assign their ID's
-            inner.set_id(half_edges_.size());
-            outer.set_id(half_edges_.size() + 1);
+        // Assign their ID's
+        inner.set_id(half_edges_.size());
+        outer.set_id(half_edges_.size() + 1);
 
-            // Link them as twins
-            inner.set_twin(outer.id());
-            outer.set_twin(inner.id());
+        // Link them as twins
+        inner.set_twin(outer.id());
+        outer.set_twin(inner.id());
 
-            // Mark them as visited.
-            visited[std::pair(index.first, index.second)] = inner.id();
-            visited[std::pair(index.second, index.first)] = outer.id();
+        // Mark them as visited.
+        visited[std::pair(index.first, index.second)] = inner.id();
+        visited[std::pair(index.second, index.first)] = outer.id();
 
-            // Add them to the list.
-            half_edges_.push_back(inner);
-            half_edges_.push_back(outer);
-            edges_of_face.push_back(inner.id());
-            edges_of_face.push_back(outer.id());
-          }
-        });
+        printf("\t\tInner(%d,%d) -> Edge(%d)\n", index.first, index.second,
+               inner.id());
+        printf("\t\tOuter(%d,%d) -> Edge(%d)\n", index.second, index.first,
+               outer.id());
 
-    // Now all the created half edges correspoinging to this face have
+        // Add them to the list.
+        half_edges_.push_back(inner);
+        half_edges_.push_back(outer);
+        inner_edges_of_face.push_back(inner.id());
+
+        // Assigning incident edges to vertex.
+        vertices_[index.first].set_as_origin(inner.id());
+      }
+    });
+
+    // Now all the created half edges corresponding to this face have
     // a next/prev .
     // TODO: Improve this using another circulate view.
-    for (int i = 0; i < edges_of_face.size(); i++) {
-      HalfEdge &current = half_edges_[edges_of_face[i]];
+    std::cout << "For face " << face.id() << '\n';
+    auto n = inner_edges_of_face.size();
+    for (int i = 0; i < inner_edges_of_face.size(); i++) {
+      HalfEdge &current = half_edges_[inner_edges_of_face[i]];
       std::cout << "\tAssignin pointers for " << current.id() << '\n';
-      HalfEdgeId prev = edges_of_face[(i - 1) % edges_of_face.size()];
+      HalfEdgeId prev = inner_edges_of_face[(i + n - 1) % n];
       current.set_prev(prev);
-      HalfEdgeId next = edges_of_face[(i + 1) % edges_of_face.size()];
+      HalfEdgeId next = inner_edges_of_face[(i + 1) % n];
       current.set_next(next);
-    }
-
-    // Assign incident edges to each vertex.
-    for (auto e : half_edges_) {
-      if (!vertices_[e.origin()].has_incident_edge())
-        vertices_[e.origin()].set_as_origin(e.id());
+      printf("Result: Prev(%d)->Edge(%d)->Next(%d)\n", prev,
+             inner_edges_of_face[i], next);
     }
 
     // Assign incident edge for this face.
-    face.set_incident_edge(edges_of_face[0]);
+    face.set_incident_edge(inner_edges_of_face[0]);
   });
+
+  std::ranges::for_each(
+      half_edges_ | std::views::filter(
+                        [this](const auto edge) { return !edge.has_next(); }),
+      [this](auto &edge) {
+        HalfEdge twin = half_edges_[edge.twin()];
+        HalfEdgeId prev_of_twin = half_edges_[twin.id()].prev();
+        HalfEdgeId next_of_twin = half_edges_[twin.id()].next();
+        HalfEdgeId twin_of_prev_of_twin = half_edges_[prev_of_twin].twin();
+        HalfEdgeId twin_of_next_of_twin = half_edges_[next_of_twin].twin();
+
+        edge.set_next(twin_of_prev_of_twin);
+        edge.set_prev(twin_of_next_of_twin);
+        printf("Edge(%d) -> Next(%d), Prev(%d)\n", edge.id(),
+               twin_of_prev_of_twin, twin_of_next_of_twin);
+      });
 }
 
 size_t Mesh::num_of_vertices() const { return vertices_.size(); }
