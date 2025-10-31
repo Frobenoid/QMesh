@@ -3,7 +3,6 @@
 #include <QMesh/types.hpp>
 #include <algorithm>
 #include <cstddef>
-#include <cstdio>
 #include <map>
 #include <ranges>
 #include <utility>
@@ -38,7 +37,7 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
     // its twin, and its id.
     std::ranges::for_each(
         face.circulate(), [this, &visited, &inner_edges_of_face,
-                           face](std::pair<VertexId, VertexId> index) {
+                           &face](std::pair<VertexId, VertexId> index) {
           if (visited.contains(index)) {
             // The current edge was previously created as a boundary edge,
             // now we assign its face.
@@ -96,7 +95,7 @@ Mesh::Mesh(std::vector<std::array<float, 3>> vertices,
         return !edge.incident_face().has_value();
       }),
       [this](auto &edge) {
-        HalfEdge twin = half_edges_[edge.twin()];
+        HalfEdge &twin = half_edges_[edge.twin()];
         HalfEdgeId prev_of_twin = half_edges_[twin.id()].prev();
         HalfEdgeId next_of_twin = half_edges_[twin.id()].next();
         HalfEdgeId twin_of_prev_of_twin = half_edges_[prev_of_twin].twin();

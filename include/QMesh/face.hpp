@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <optional>
 #include <utility>
-#include <vector>
 
 namespace qmesh {
 // TODO: This will only work for triangle meshes.
@@ -38,7 +37,7 @@ public:
   FaceId id() const;
   void set_id(FaceId to);
 
-  const std::vector<std::pair<VertexId, VertexId>> circulate() const;
+  const std::array<std::pair<VertexId, VertexId>, 3> circulate() const;
 
 private:
   // Indices of vertex forming this face, relative to their

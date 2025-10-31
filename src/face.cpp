@@ -38,7 +38,7 @@ void Face::set_id(FaceId to) {
 bool Face::has_incident_edge() { return incident_edge_.has_value(); }
 
 // TODO: Allow this to be more general.
-const std::vector<std::pair<VertexId, VertexId>> Face::circulate() const {
+const std::array<std::pair<VertexId, VertexId>, 3> Face::circulate() const {
   return {
       std::pair(indices_[0], indices_[1]),
       std::pair(indices_[1], indices_[2]),
