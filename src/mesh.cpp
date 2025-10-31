@@ -133,8 +133,8 @@ size_t Mesh::num_of_vertices() const { return vertices_.size(); }
 size_t Mesh::num_of_faces() const { return faces_.size(); }
 size_t Mesh::num_of_half_edges() const { return half_edges_.size(); }
 
-std::vector<Vertex> &Mesh::vertices() { return vertices_; }
-std::vector<Face> &Mesh::faces() { return faces_; }
-std::vector<HalfEdge> &Mesh::half_edges() { return half_edges_; }
+const std::vector<Vertex> &Mesh::vertices() const { return vertices_; }
+const std::vector<Face> &Mesh::faces() const { return faces_; }
+const std::vector<HalfEdge> &Mesh::half_edges() const { return half_edges_; }
 
 } // namespace qmesh
