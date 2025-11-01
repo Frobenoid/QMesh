@@ -1,7 +1,6 @@
 #include "QMesh/primitives.hpp"
 #include "QMesh/mesh.hpp"
 #include <catch2/catch_test_macros.hpp>
-#include <cstdio>
 
 TEST_CASE("Cube", "[primitive]") {
   qmesh::Mesh cube = qmesh::primitive::make_cube();
