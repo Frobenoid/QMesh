@@ -52,7 +52,6 @@ TEST_CASE("Simplex", "[primitive]") {
     auto next_next = next.next();
     auto next_next_next = simplex.half_edges()[next_next].next();
 
-    printf("Face(%d)", e.incident_face().value());
     REQUIRE(simplex.half_edges()[e.twin()].twin() == e.id());
 
     // this.next.next.next = this
