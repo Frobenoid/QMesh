@@ -4,6 +4,7 @@ vertex.cpp
 face.cpp
 halfedge.cpp
 mesh.cpp
+primitives.cpp
 )
 add_library(qmesh::libqmesh ALIAS libqmesh)
 
